@@ -1,0 +1,97 @@
+\section{Reproducing Kernel Hilbert Spaces (Ch. 12)}
+\subsection{Basics of Hilbert space}
+
+\begin{definition}[Hilbert spaces]
+A Hilbert space $\mathcal{H}$ is a complete inner product space. In a Hilbert space
+\begin{itemize}
+    \item There endows an inner product: $\langle \cdot, \cdot, \rangle_\mathcal{H}$,
+    \item Every Cauchy sequence $(f_n)_{n=1}^\infty$ in $\mathcal{H}$ converges to some element $f^* \in \mathcal{H}$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Riesz representation]
+Let $L$ be a bounded linear functional on a Hilbert space $\mathcal{H}$. Then there exists a unique representer $g\in \mathcal{H}$ such that $L(f) = \langle f, g \rangle_\mathcal{H}$ for all $f \in H$.
+\end{theorem}
+\begin{proof}
+Consider a null space $\mathrm{Null}(L) := \{h \mid L(h) = 0\}$. If $\mathrm{Null}(L) = H$, then $\mathrm{Null}(L)^\bot = \{0\}$, we take $g = 0$. 
+
+In a non-trivial case (i.e., $\mathrm{Null}(L)^\bot \neq \{0\}$), there exist a non-zero element $g \in \mathrm{Null}(L)^\bot$ such that $\norm{g}_\mathcal{H} = L(g)$. Define $h:= L(f) g - L(g) f$, then we note
+\begin{align*}
+    L(h) = L(f) L(g) - L(g) L(f) = 0,
+\end{align*}
+which means $h \in \mathrm{Null}(L)$. Therefore, we have $h \bot g$, i.e.,
+\begin{align*}
+    0 & = \langle h, g \rangle_\mathcal{H} = L(f) \norm{g}^2_\mathcal{H} - L(g) \langle f, g \rangle_\mathcal{H}.
+\end{align*}
+This implies $L(f) = \langle f, g \rangle_\mathcal{H}$.
+\end{proof}
+\begin{table*}[t]
+\center
+        \begin{tabular}{lll}
+    \toprule
+         Space & Kernel & Eigenfunctin  \\
+    \midrule
+         $2$-poly. & $K(x, z) = (1 + xz)^2$ & $\phi_j(x) = a_0^j + a_1^j x + a_2^j x^2$, const via eigen-decomposition.  \\
+         $1$-Sobolev $W_2^1([0,1])$ & $K(x, z) = \min \{x, z\}$ & $\phi_j(t)=\sin \frac{(2j-1)\pi t}{2}, \mu_j = \left(\frac{2}{(2j-1)\pi} \right)^2$ \\
+    \bottomrule
+    \end{tabular}
+\end{table*}
+
+\subsection{Reproducing kernel Hilbert space}
+\begin{definition}[Kernel function]
+Given a feature map $\phi: \mathcal{X} \rightarrow \mathcal{H}$ and the Hilbert space $\mathcal{H}$ that $\phi$ maps to, the kernel function is defined as $$ K(x, y) := \langle \phi(x), \phi(y) \rangle_\mathcal{H}.
+$$
+\end{definition}
+
+\begin{definition}[RKHS - defined by kernel] A reproducing kernel Hilbert space is a Hilbert space $\mathcal{H}$ of functions $f: \mathcal{X} \rightarrow \R$  with a kernel function $K(\cdot, \cdot)$ that
+\begin{itemize}
+    \item For any $x \in \mathcal{X}$, $K(\cdot, x) \in \mathcal{H}$,
+    \item Satisfies the ``reproducing property'':$$
+    \langle f(\cdot), K(\cdot, x) \rangle_\mathcal{H} = f(x), \quad \forall f \in \mathcal{H}.
+$$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[RKHS from kernel function]
+Given any positive semi-definite kernel function $K(\cdot, \cdot)$, there is a \textbf{unique} Hilbert space $\mathcal{H}$ in which the kernel $K(\cdot, \cdot)$ satisfies the reproducing property. 
+
+Given some data $\{x_i\}_{i=1}^n $, such Hilbert space $\mathcal{H}$ is 
+$$
+\mathcal{H} := \left\{ f(\cdot) = \sum_{i=1}^n \alpha_i K(\cdot, x_i)\ \bigg|\ x_i \in \mathcal{X} \right\}$$
+with the norm
+$$
+\langle f, f' \rangle_\mathcal{H} := \sum_{i=1}^n  \sum_{j=1}^n \alpha_i \alpha'_j K(x_i, x_j)  
+$$
+\end{theorem}
+\textbf{Remark}: For a fixed kernel function, there will be (infinitely) many feature maps, and thus many Hilbert spaces of the feature. But the Hilbert space that \textbf{satisfies the reproducing property} is unique!
+
+\begin{definition}[RKHS - defined by evaluation functional] A reproducing kernel Hilbert space is a Hilbert space $\mathcal{H}$ of functions $f: \mathcal{X} \rightarrow \R$ such that for each $x \in \mathcal{X}$, the evaluation functional $L_x: \mathcal{H} \rightarrow \R$ that performs the operation $L_x(f) = f(x)$ is bounded, i.e.,
+$$
+f(x) = |L_x(f)| \leq M \norm{f}_\mathcal{H}, \quad \exists M < \infty,  \forall f \in \mathcal{H}.
+$$
+\end{definition}
+\begin{proof}
+Let's prove the equivalence to the first definition.
+
+When $L_x$ is a bounded linear functional, the Riesz theorem shows that there exists a unique $R_x \in \mathcal{H}$ such that
+$$
+L_x(f) = \langle f, R_x \rangle_\mathcal{H}.
+$$
+Similarly, we can get a unique $R_y$ based on $y$. The kernel is defined as $K(x, y) = \langle R_x, R_y \rangle_\mathcal{H}$. Next, we can verify that $K$ is positive semidefinite.
+\begin{align*}
+    \alpha^T K \alpha & = \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j K(x_i, x_j) = \langle \sum_{i=1}^n \alpha_i R_{x_i}, \sum_{j=1}^n \alpha_j R_{x_j} \rangle_\mathcal{H} \\
+    & = \norm{\sum_{i=1}^n \alpha_i R_{x_i}}^2_\mathcal{H} \geq 0.
+\end{align*}
+\end{proof}
+
+\subsection{Mercer's theorem and its consequences}
+\begin{theorem}[Mercer's]
+For a continuous and PSD kernel function $K$ that satisfies the Hilbert-Schmidt condition. Then there exist a sequence of eigenfunctions $(\phi_i)_{i=1}^\infty$ that form an orthonormal basis of $L^2(\mathcal{X}; P)$ and non-negative eigenvalues $(\mu_i)_{i=1}^\infty$ such that
+\begin{align}
+    T_K(\phi_i) = \mu_i \phi_i, \quad \forall i=1,2,\cdots
+\end{align}
+Moreover, the kernel function has the expansion
+\begin{align*}
+    K(x, y) = \langle \Phi(x), \Phi(y) \rangle_{\ell^2(\mathbb{N)}} := \sum_{i=1}^\infty \mu_i \phi_i(x) \phi_j(y)
+\end{align*}
+\end{theorem}

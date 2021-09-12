@@ -1,0 +1,264 @@
+\documentclass{article}
+% \usepackage[UTF8]{ctex}
+
+\usepackage[colorlinks]{hyperref}
+\usepackage[fontsize=9.5pt]{fontsize}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage{ulem}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\titleformat{\section}
+  {\normalfont\sffamily\Large\bfseries}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\sffamily\large\bfseries}
+  {\thesubsection}{1em}{}
+  
+\geometry{a4paper, left=1.5cm, right=1.5cm, top=2cm, bottom=2.5cm}
+\setlength\columnsep{15pt} 
+\setlength\parindent{0em}
+
+% \renewcommand{\familydefault}{\sfdefault}
+% \CTEXsetup[format={\centering}]{section}
+% \CTEXsetup[nameformat={\zihao{4}\heiti}]{section}
+% \CTEXsetup[titleformat={\zihao{4}\heiti}]{section}
+% \CTEXsetup[format={}]{subsection}
+% \CTEXsetup[nameformat={\zihao{-4}\heiti}]{subsection}
+% \CTEXsetup[titleformat={\zihao{-4}\heiti}]{subsection}
+% % \setCJKmainfont{SimSun}[BoldFont=HeiTi,ItalicFont=KaiTi]
+% % \setCJKmainfont{SimSun}
+% \renewcommand{\textbf}[1]{{\heiti #1}}
+\setlist[itemize]{leftmargin=*}
+
+\definecolor{tssteelblue}{RGB}{70,130,180}
+\definecolor{tsorange}{RGB}{255,138,88}
+\definecolor{tsblue}{RGB}{23,74,157}
+\definecolor{tsforestgreen}{RGB}{21,122,81}
+\definecolor{tsyellow}{RGB}{255,185,88}
+\definecolor{tsgrey}{RGB}{200,200,200}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% \newenvironment{boxtheorem}
+% {\begin{tcolorbox}
+% [enhanced jigsaw,breakable,pad at break*=1mm,
+%  colback=black!5,colframe=tsorange]}
+% {\end{tcolorbox}}
+\numberwithin{equation}{section}
+
+\newenvironment{boxdefinition}
+{\begin{tcolorbox}
+[enhanced jigsaw,breakable,pad at break*=0mm, left=3pt, right=3pt,
+ colback=yellow!8!white,boxrule=0pt,frame hidden,
+ borderline west={0.2mm}{0mm}{tsyellow}]}
+{\end{tcolorbox}}
+
+\newenvironment{boxtheorem}
+{\begin{tcolorbox}
+[enhanced jigsaw,breakable,pad at break*=0mm, left=3pt, right=3pt,
+ colback=tsblue!5!white,boxrule=0pt,frame hidden,
+ borderline west={0.2mm}{0mm}{tsblue}]}
+{\end{tcolorbox}}
+
+\newenvironment{boxproof}
+{\begin{tcolorbox}
+[enhanced jigsaw,breakable,pad at break*=0mm, left=3pt, right=3pt,
+ colback=gray!5!white,boxrule=0pt,frame hidden,
+ borderline west={0.2mm}{0mm}{gray}]}
+{\end{tcolorbox}}
+
+\newenvironment{boxproperty}
+{\begin{tcolorbox}
+[enhanced jigsaw,breakable,pad at break*=0mm, left=3pt, right=3pt,
+ colback=gray!8!white,boxrule=0pt,frame hidden,
+ borderline west={0.2mm}{0mm}{gray}]}
+{\end{tcolorbox}}
+
+\newenvironment{boxmethod}
+{\begin{tcolorbox}
+[enhanced jigsaw,breakable,pad at break*=0mm, left=3pt, right=3pt,
+ colback=tsforestgreen!5!white,boxrule=0pt,frame hidden,
+ borderline west={0.2mm}{0mm}{tsforestgreen}]}
+{\end{tcolorbox}}
+
+\newtheoremstyle{styledefinition}
+{0pt}{0pt}{\normalfont}{0pt}{\bf\color{black}}{\;}{0.1em}
+{\sffamily\color{black}\thmname{#1}\,\thmnumber{#2}
+ \thmnote{\color{black} (#3)}}
+ 
+\newenvironment{nalign}{
+    \begin{equation}
+    \begin{aligned}
+}{
+    \end{aligned}
+    \end{equation}
+    \ignorespacesafterend
+}
+ 
+\theoremstyle{styledefinition}
+\newtheorem{envtheorem}{Thm.}
+\newtheorem{envdefinition}{Def.}
+\newtheorem{envproperty}{Prop.}
+\newtheorem{envmethod}{Method.}
+\newenvironment{envproof}{\noindent\textit{Proof.}}{\hfill $\square$}
+
+\newenvironment{definition}
+               {\begin{boxdefinition}\begin{envdefinition}}
+               {\end{envdefinition}\end{boxdefinition}}
+\newenvironment{theorem}
+               {\begin{boxtheorem}\begin{envtheorem}}
+               {\end{envtheorem}\end{boxtheorem}}
+\newenvironment{property}
+               {\begin{boxproperty}\begin{envproperty}}
+               {\end{envproperty}\end{boxproperty}}
+\renewenvironment{proof}
+               {\begin{envproof}}
+               {\end{envproof} \vspace{1em}}
+\newenvironment{method}
+               {\begin{boxmethod}\begin{envmethod}}
+               {\end{envmethod}\end{boxmethod}}
+            
+               
+\newcommand{\E}[2]{\mathbb{E}_{#1}\left[ #2 \right]}
+\newcommand{\EE}[0]{\mathbb{E}}
+\newcommand{\EEE}[1]{\mathbb{E}\left[ #1 \right]}
+\newcommand{\VV}[1]{\mathbb{V}\left[ #1 \right]}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ind}[1]{\;\mathbbm{1}\left\{\textstyle \, #1\right\}}
+\newcommand{\onehalf }{\frac{1}{2}}
+\newcommand{\norm }[1]{\left\lVert #1 \right\rVert}
+\newcommand{\diff}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\Diff}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ddiff}[1]{\frac{\partial^2}{\partial #1^2}}
+\newcommand{\DDiff}[2]{\frac{\partial^2 #1}{\partial #2^2}}
+
+% mathbf
+\newcommand{\bfA}{\mathbf{A}}
+\newcommand{\bfB}{\mathbf{B}}
+\newcommand{\bfC}{\mathbf{C}}
+\newcommand{\bfD}{\mathbf{D}}
+\newcommand{\bfE}{\mathbf{E}}
+\newcommand{\bfF}{\mathbf{F}}
+\newcommand{\bfI}{\mathbf{I}}
+\newcommand{\bfK}{\mathbf{K}}
+\newcommand{\bfU}{\mathbf{U}}
+\newcommand{\bfV}{\mathbf{V}}
+\newcommand{\bfW}{\mathbf{W}}
+\newcommand{\bfX}{\mathbf{X}}
+\newcommand{\bfY}{\mathbf{Y}}
+\newcommand{\bfZ}{\mathbf{Z}}
+\newcommand{\bfLM}{\mathbf{\Lambda}}
+\newcommand{\bfmu}{\boldsymbol{\mu}}
+\newcommand{\bfSigma}{\mathbf{\Sigma}}
+
+\newcommand{\bfa}{\mathbf{a}}
+\newcommand{\bfb}{\mathbf{b}}
+\newcommand{\bfc}{\mathbf{c}}
+\newcommand{\bff}{\mathbf{f}}
+\newcommand{\bfk}{\mathbf{k}}
+\newcommand{\bfu}{\mathbf{u}}
+\newcommand{\bfv}{\mathbf{v}}
+\newcommand{\bfw}{\mathbf{w}}
+\newcommand{\bfx}{\mathbf{x}}
+\newcommand{\bfy}{\mathbf{y}}
+\newcommand{\bfz}{\mathbf{z}}
+
+% cal
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+% bm
+\newcommand{\bmA}{\bm{A}}
+\newcommand{\bmB}{\bm{B}}
+\newcommand{\bmC}{\bm{C}}
+\newcommand{\bmD}{\bm{D}}
+\newcommand{\bmE}{\bm{E}}
+\newcommand{\bmF}{\bm{F}}
+\newcommand{\bmI}{\boldsymbol{I}}
+\newcommand{\bmU}{\bm{U}}
+\newcommand{\bmV}{\bm{V}}
+\newcommand{\bmW}{\bm{W}}
+\newcommand{\bmX}{\bm{X}}
+\newcommand{\bmY}{\bm{Y}}
+\newcommand{\bmZ}{\bm{Z}}
+\newcommand{\bmLM}{\boldsymbol{\Lambda}}
+
+\newcommand{\bma}{\bm{a}}
+\newcommand{\bmb}{\bm{b}}
+\newcommand{\bmc}{\bm{c}}
+\newcommand{\bmd}{\bm{d}}
+\newcommand{\bme}{\bm{e}}
+\newcommand{\bmf}{\bm{f}}
+\newcommand{\bmg}{\bm{g}}
+\newcommand{\bmh}{\bm{h}}
+\newcommand{\bmi}{\boldsymbol{i}}
+\newcommand{\bmu}{\bm{u}}
+\newcommand{\bmv}{\bm{v}}
+\newcommand{\bmw}{\bm{w}}
+\newcommand{\bmx}{\bm{x}}
+\newcommand{\bmy}{\bm{y}}
+\newcommand{\bmz}{\bm{z}}
+
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\HH}{\mathbb{H}}
+
+\newcommand{\ii}{\mathrm{i}}
+\renewcommand{\d}{\ \mathrm{d}}
+\newcommand{\dx}{\ \mathrm{d}x}
+\newcommand{\dy}{\ \mathrm{d}y}
+\newcommand{\dz}{\ \mathrm{d}z}
+\newcommand{\domega}{\ \mathrm{d}\omega}
+
+\newcommand{\dxx}{\ \mathrm{d}\bfx}
+\newcommand{\dyy}{\ \mathrm{d}\bfy}
+
+\newcommand{\dotp}[2]{\left\langle #1, #2 \right \rangle}
+
+\begin{document}
+
+\title{Guarantees for Machine Learning: Fact Sheet}
+\author{Tao SUN \\ \url{taosun47@student.ethz.ch}}
+
+\maketitle
+
+% \begin{multicols*}{2}
+\tableofcontents
+
+\vspace{2em}
+\section*{Disclaimer}
+This note is mainly based on our slides and the textbook (High-Dimensional Statistics: A Non-Asymptotic Viewpoint by Martin J. Wainwright). The main purpose of writing this note is to familiarize me with the concepts and mathematical derivations in the course. Therefore, I do not guarantee the correctness and completeness of it.
+
+% \end{multicols*}
+
+\newpage
+
+\begin{multicols}{2}
+\input{chapter1}
+\input{chapter2}
+\input{chapter4}
+\input{chapter5}
+\input{chapter12}
+\input{chapter13}
+\end{multicols}
+
+\end{document}

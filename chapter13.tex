@@ -1,0 +1,132 @@
+\section{Non-parametric Least Squares (Ch. 13)}
+
+\subsection{Fixed design}
+
+\begin{definition}[Least square regression]
+For a function $f^*$ and data collection $\{(x_i, y_i)\}_{i=1}^n$, where $y_i = f^*(x_i) + \sigma w_i$, $w_i \sim \NN{0, 1}$, the least-squares estimateor estimator is given by
+$$
+\hat{f} = \arg \min_{f\in\mathcal{F}} \frac{1}{n} \sum_{i=1}^{n} (y_i - f(x_i))^2.
+$$
+\end{definition}
+
+\begin{property}[Basic inequality] In the non-parametric least squares, we have the optimality of $\hat{f}$, which means
+$$
+\frac{1}{n} \sum_{i=1}^{n}\left(\hat{f}\left(x_{i}\right)-y_{i}\right)^{2} \leq \frac{1}{n} \sum_{i=1}^{n}\left(f^{*}\left(x_{i}\right) - y_{i}\right)^{2}
+$$
+Or, equivalently,
+$$
+\left\|f-f^{*}\right\|_{n}^{2} \leq \frac{2 \sigma}{n} \sum_{i=1}^{n} w_{i}\left(f\left(x_{i}\right)-f^{*}\left(x_{i}\right)\right).
+$$
+\end{property}
+\begin{proof}
+Let's prove the equivalence. Note that $y_i = f^*(x_i) + \sigma w_i$, we have 
+\begin{align*}
+    0 & \geq \frac{1}{n} \sum_{i=1}^{n}\left(\hat{f}\left(x_{i}\right)-y_{i}\right)^{2} - \frac{1}{n} \sum_{i=1}^{n}\left(f^{*}\left(x_{i}\right) - y_{i}\right)^{2} \\
+    & \geq \frac{1}{n} \sum_{i=1}^{n} \left( (\hat{f}(x_i)^2 - f^*(x_i)^2) - 2y_i (\hat{f}(x_i) - f^*(x_i)) \right) \\
+    & \geq \frac{1}{n} \sum_{i=1}^{n} \left( (\hat{f}(x_i) - f^*(x_i))^2 - 2\sigma w_i (\hat{f}(x_i) - f^*(x_i))\right),
+\end{align*}
+which means
+$$
+\frac{1}{n} \sum_{i=1}^{n} \left( (\hat{f}(x_i) - f^*(x_i))^2 \right) \leq \frac{2 \sigma}{n} \sum_{i=1}^{n} \left( w_i (\hat{f}(x_i) - f^*(x_i)) \right).
+$$
+\end{proof}
+
+\begin{definition}[Localized Gaussian complexity] If we restrict the radius of function space $\mathcal{F}$, i.e., $\norm{f}_n \leq \delta$, we have the localized Gaussian complexity for $\mathcal{F}$,
+$$
+{\mathcal{G}}_n\left(\delta ; \mathcal{F}\right):=\mathbb{E}_{w \sim \mathcal{N}(0,1)}\left[\sup _{f \in \mathcal{F},\|f\|_{n} \leq \delta} \frac{1}{n} \sum_{i=1}^{n} w_{i} f\left(x_{i}\right)\right]
+$$
+\end{definition}
+
+\begin{definition}[Critical radius]
+For a local Gaussian complexity $\mathcal{G}_{n}$ around $f^*$ with radius $\delta$, the radius $\delta$ is said to be \textit{valid} if the following \textit{critical inequality} satisfies,
+$$
+\frac{\mathcal{G}_{n}\left(\delta ; \mathcal{F}^{*}\right)}{\delta} \leq \frac{\delta}{2 \sigma}
+$$
+The smallest $\delta$ satisfies it is the \textit{critical radius}, which must exist for any star-shaped function class $\mathcal{F}$.
+\end{definition}
+
+\textbf{Remark}: One intuition is that the satisfaction of critical inequality means the optimality of $\hat{f}$. One example is that if we have the optimality of $\hat{f}$, i.e.,
+\begin{align*}
+    \frac{1}{2 n} \sum_{i=1}^{n}\left(y_{i}-\widehat{f}\left(x_{i}\right)\right)^{2} \leq \frac{1}{2 n} \sum_{i=1}^{n}\left(y_{i}-f^{*}\left(x_{i}\right)\right)^{2}
+\end{align*}
+And let $\delta = \EE \norm{\hat{f} - f^*}_n$, then we can show the $\delta$ satisfies $\frac{1}{2} \delta^{2} \leq \sigma \mathcal{G}_{n}\left(\delta ; \mathcal{F}^{*}\right)$, which is equivalent to the critical inequality.
+
+
+\begin{theorem}[Risk decomposition] In the least-squares regression, where $y_i = f^*(x_i) + \sigma w_i, w_i \sim \NN(0,1)$, we have risk decomposition
+$$
+R(f)=\left(\EE f(x) - \EE f^*(x)\right)^2 + \mathrm{var}\left(f(x)\right) + \sigma^{2}
+$$
+\end{theorem}
+\begin{proof} Using the fact $ \mathrm{var}(x) =  \EE x^2 - (\EE x)^2 $ and the independence of $y$ and $f(x)$, we have
+\begin{align*}
+    R(f) & = \EE\left[(y - f(x))^2\right] \\
+         & = \EE y^2 + \EE f(x)^2 - 2 \EE y f(x) \qquad (y \text{ and } f(x) \text{ are indep.})\\
+         & = \mathrm{var}\left(y\right) + \left(\EE y\right)^2 + \mathrm{var}\left((f(x)\right) - \left(\EE f(x)\right)^2 + 2 (\EE y) (\EE f(x)) \\
+         & = \mathrm{var}\left(y\right) + \mathrm{var}\left(f(x)\right)  + \left(\EE f(x) - \EE y\right)^2 \\
+         & =\underbrace{\left(\EE f(x) - \EE f^*(x)\right)^2}_{\text{bias}^2} + \underbrace{\mathrm{var}\left(f(x)\right)}_{\text{variance}} + \underbrace{\sigma^2}_{\text{irreducible noise}}.
+\end{align*}
+If there is no variance in model, we can also get the decomposition  as,
+\begin{align*}
+R(f) &= \mathbb{E} \frac{1}{n} \sum_{i=1}^{n}\left(y_i -f\left(x_{i}\right)\right)^{2} \\
+&= \mathbb{E} \frac{1}{n} \sum_{i=1}^{n}\left(f^{*}\left(x_{i}\right)+ \sigma w_i -f\left(x_{i}\right)\right)^{2} \\
+&=\mathbb{E} \frac{1}{n} \sum_{i=1}^{n}\left(f^{*}\left(x_{i}\right)-f\left(x_{i}\right)\right)^{2}+ \mathbb{E} \frac{1}{n} \sum_{i=1}^{n} \sigma^2 w^{2} \\ 
+& \quad +2 \mathbb{E} \frac{1}{n} \sum_{i=1}^{n}  w\left(f^{*}\left(x_{i}\right)-f\left(x_{i}\right)\right) \\
+& = \left\|f-f^{*}\right\|_{n}^{2}+\sigma^{2}
+\end{align*}
+\end{proof}
+\begin{theorem}[Prediction error bound]
+If $\mathcal{F}^*$ is star-shaped, then for any $\delta$ satisfies the critical inequality and $t \geq \delta$, the non-parametric least square estimate $\hat{f}_n$ satisfies
+$$P\left(\norm{\hat{f}_n -f^{*}}_{n}^{2} \geq 16 t \delta_{n}\right) \leq \exp \left(-\frac{n t \delta_{n}}{2 \sigma^{2}}\right),$$
+which also means for some constant $c$,
+$$
+\EE \norm{\hat{f}_n -f^{*}}_{n}^{2} \leq c \left( \delta_n^2 + \frac{\sigma^2}{n} \right).
+$$
+\end{theorem}
+\textbf{Remark}: This theorem links the local Gaussian complexity to the error bounds.
+
+\begin{proof}
+Let $\hat{\Delta} = f - f^*$, and thus $\norm{\hat{\Delta}} = \norm{f - f^*}_n^2$. Our goal is to show for any $\norm{\hat{\Delta}}_n \geq \sqrt{t} \delta_n$,
+\begin{align*}
+    \|\hat{\Delta}\|_{n}^{2} \leq \frac{2 \sigma}{n} \sum_{i=1}^{n} w_{i} \hat{\Delta}\left(x_{i}\right) \stackrel{(i)} \leq 4\|\hat{\Delta}\|_{n} \sqrt{t} \delta_{n}
+\end{align*}
+with probability $1 - e^{- \frac{n t \delta^2_n}{2 \sigma^2}}$. The theorem follows from rearranging terms.
+We organize the proof in multiple steps.
+
+For a given scalar $u \geq \delta_n$, define the event
+$$
+\mathcal{A}(u):=\left\{\exists g \in \mathcal{F}^{*} \cap \{\norm{g}_{n} \geq u\}\, \bigg| \, \left| \frac{\sigma}{n} \sum_{i=1}^{n} \tilde{w}_{i} g\left(x_{i}\right) \right| \geq 2u\norm{g}_{n}\right\}
+$$
+\end{proof}
+
+\begin{theorem}[Bounds via metric entropy]
+Any $\delta \in (0, \sigma]$ such that
+\begin{align*}
+    \frac{16}{\sqrt{n}} \int_{\frac{\delta^{2}}{4 \sigma}}^{\delta} \sqrt{\log N_{n}\left(t ; \mathbb{B}_{n}\left(\delta ; \mathscr{F}^{*}\right)\right)} d t \leq \frac{\delta^{2}}{4 \sigma}
+\end{align*}
+satisfies the critical inequality. 
+\end{theorem}
+
+\subsection{Error bounds for RKHS}
+
+\begin{definition}[$R$-restrained space] The function space inside the radius $R$ is
+$$
+\mathcal{F}_{R}:=\left\{f \in \mathcal{F} \mid\|f\|_{\mathcal{F}} \leq R\right\}
+$$
+\end{definition}
+\begin{theorem}[Localized Gaussian complexity for RKHS]
+Let an RKHS $\mathcal{F}$ with kernel function $K(\cdot, \cdot)$. Defining $\hat{\mu}_j$ as eigenvalues of the kernel matrix $K$, we have the local Gaussian complexity bounded by
+$$
+{\mathcal{G}}_{n}\left(\delta; \mathcal{F}_{R}\right) \leq \sqrt{\frac{R + 1}{n}} \sqrt{\sum_{j=1}^{n} \min \left\{\delta^{2}, \hat{\mu}_{j}\right\}}
+$$
+Note that the localized Gaussian complexity is computed under  $\norm{f}_\mathcal{F} \leq R, \norm{f}_n \leq \delta$.
+\end{theorem}
+
+\begin{theorem}[Prediction error for norm-bounded RKHS]
+When $\lambda_n \geq 2 \delta^2_{n;R}$ there is universal constants $c_0, c_1, c_3$ such that
+$$
+P\left(\left\|\widehat{f}_{\lambda_{n}}-f^{\star}\right\|_{n}^{2} \geq c R^{2}\left(\delta_{n ; R}^{2}+\lambda_{n}\right) \right) \leq c_{0} e^{-c_{1} \frac{n R^{2} \delta_{n: R}^{2}}{\sigma^{2}}}
+$$
+\end{theorem}
+
+\subsection{Random design}
+\textit{WIP...}

@@ -1,0 +1,221 @@
+\section{Concentration bounds (Ch. 2)}
+\subsection{Classical bounds}
+The most basic tail bound is Markov's inequality.
+\begin{theorem}[Markov's inequality]
+For a random non-negative variable $X$ with finite mean,
+\begin{align*}
+    P(X \geq t) \leq \frac{\mathbb{E} X}{t}, \qquad \forall t > 0.
+\end{align*}
+\end{theorem}
+\begin{proof} Using the non-negativity of $X$ and the definition of expectation,
+\begin{align*}
+     \mathbb{E}X & =\int_0^\infty x f(x) \d x = \int _{0}^{t}xf(x)\d x+\int_{t}^{\infty }xf(x) \d x \\
+     & \geq \int_{t}^{\infty }xf(x)\d x\geq t \int _{a}^{\infty}f(x)\d x  = t P(X\geq t).
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Chebyshev's inequality]
+For a random variable $X$ with finite $k$-th order center momentum,
+\begin{align*}
+    P(|X - \mu| \geq t) & = P(|X - \mu|^k \geq t^k) \\
+    & \leq \frac{\mathbb{E} |X - \mu|^k}{t^k}, \qquad \forall t > 0.
+\end{align*}
+\end{theorem}
+\begin{proof} Replacing $X$ with $|X - \mu|^k$ in Markov's inequality.
+\end{proof}
+
+\begin{method}[Chernoff bound] Apply Markov's inequality to random variable $Y = e^{\lambda (X - \mu)}$ ($0 \leq \lambda \leq b$), we get
+\begin{align*}
+    P(X - \mu \geq t) = P(e^{\lambda (X - \mu)} \geq e^{\lambda t}) \leq \frac{\EE{e^{\lambda(X - \mu)}}}{e^{\lambda t}}.
+\end{align*}
+Then, optimizing $\lambda$ to get a tighter bound,
+\begin{align*}
+    \log  P(X - \mu \geq t) \leq \inf_{\lambda} \left( \log \EE{e^{\lambda(X - \mu)}} - \lambda t \right).
+\end{align*}
+\end{method}
+Chernoff bound will be used in achieving tail bounds of the sub-Gaussian and sub-exponential distribution.
+
+\subsection{Sub-Gaussian and Hoeffding bounds}
+\begin{definition}[Sub-Gaussian] A random variable $X$ with mean $\mu$ is sub-Gaussian with parameter $\siamg$ if one of following holds:
+\begin{itemize}
+    \item MGF condition: $$\EE{e^{\lambda (X - \mu)} \leq e^{\frac{\lambda^2 \sigma^2 }{2}}}, \quad \forall \lambda \in \R.$$
+    \item Tail bound condition ($Z \sim \NN(0, \sigma^2)$): $$P(|X - \mu| \geq t) \leq c P(|Z - \mu| \geq t), \quad \exists c > 0, \forall t \geq 0.$$
+\end{itemize}
+\end{definition}
+\noindent For simplicity, we denote the sub-Gaussian random variable $X$ with mean $\mu$ and parameter $\sigma^2$ as $X \sim SG(\mu, \sigma^2)$.
+
+\begin{property}[Sub-Gaussian tail bound\label{prop:sub-gaussian-tail}] For $X \sim SG(\mu, \sigma^2)$,
+\begin{align*}
+    P(X - \mu \geq t) \leq e^{-\frac{t^2}{2\sigma^2}}, \quad \forall t \in \R.
+\end{align*}
+\end{property}
+\begin{proof}
+Applying Chernoff bound on $e^{\lambda(X - \mu)}$, we have
+\begin{align*}
+    \log  P(X - \mu \geq t) & \leq \inf_{\lambda > 0} \left( \log \EE{e^{\lambda(X - \mu)}} - \lambda t \right) \\
+    & \leq  \inf_{\lambda > 0} \left(\frac{\sigma^2 \lambda^2}{2}- \lambda t \right) = -\frac{t^2}{2 \sigma^2}.
+\end{align*}
+Taking exponential on both sides gives the desired form.
+\end{proof}
+
+\begin{property}[Sum of sub-Gaussian RVs\label{prop:sum_sub_gaussian}] For $X_1 \sim SG(\mu_1, \sigma_1^2)$, $X_2 \sim SG(\mu_2, \sigma_2^2)$, 
+\begin{align*}
+    X_1 + X_2 \sim SG(\mu_1 + \mu_2, \sigma_1^2 + \sigma_2^2).
+\end{align*}
+\end{property}
+
+\begin{property}[Sub-Gaussian for bounded RV]
+For a RV $X \in [a, b]$ almost surely, $X$ is a sub-Gaussian with parameter at most $\sigma = \frac{b-a}{2}$.
+\end{property}
+\begin{proof}
+Define function $\phi(\lambda) = \log \EE e^{\lambda x}$. It is easy to show that $\phi(0) = 0$ and $\phi'(0) = \EE X := \mu$. The second derivative is 
+$$
+\phi''(\lambda) = \EE_\lambda[X^2] -  \EE_\lambda[X]^2, \quad \text{where}\ \EE_\lambda[X] = \frac{\EE f(X) e^{\lambda X}}{\EE e^{\lambda X}} 
+$$
+Taking a Taylor expansion of $\phi(\lambda)$ at $\lambda=0$,
+\begin{align*}
+    \phi(\lambda) & =\phi(0) + \lambda \phi'(0) + \frac{\lambda^2}{2} \phi''(\epsilon) \\
+    & \leq \lambda \mu + \frac{\lambda^2}{2} - \frac{(b-a)^2}{4}.
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Hoeffding bound] For $n$ independent sub-Gaussian random variables $X_i \in SG(\mu_i, \sigma_i^2), i = [n]$, 
+\begin{align*}
+    P\left(\sum_{i=1}^n (X_i - \mu_i) \geq t \right) \leq e^{-\frac{t^2}{2 \sum_{i=1}^n \sigma_i^2}}
+\end{align*}
+\end{theorem}
+\begin{proof}
+Using the sub-Gaussian tail bound (Prop.~\ref{prop:sub-gaussian-tail}) and the property of sum of Sub-Gaussian RVs (Prop.~\ref{prop:sum_sub_gaussian}).
+\end{proof}
+
+\begin{theorem}[Sub-Gaussian maxima\label{thm:sub-gaussian-maxima}]
+For a sequence of sub-Gaussian RVs $\{X_i\}_{i=1}^n$, $X_i \sim SG(0, \sigma^2)$, the following bounds hold,
+\begin{align*}
+    \mathbb{E} \max _{i=1, \ldots, n} X_{i} & \leq \sqrt{2\sigma^{2} \log n}\\
+    \mathbb{E} \max _{i=1, \ldots, n} |X|_{i} & \leq \sqrt{2 \sigma^{2} \log 2n}
+\end{align*}
+\end{theorem}
+\textbf{Remark}: This bound is frequently used in deriving other bounds.
+
+\begin{proof}
+Let $f(x) = e^{\lambda x}$ ($\lambda > 0$), we have
+	\begin{align*}
+		e^{\lambda \EE[\max_i X_i]} & \leq \EEE{e^{\lambda \max_i X_i}} \qquad (f(x) \text{ is convex})\\
+		& = \EEE{\max_i e^{\lambda X_i}} \qquad (f(x) \text{ is mono-increasing}) \\
+		& \leq \sum_{i=1}^n \EEE{e^{\lambda X_i}} \leq n e^{\sigma^2 \lambda^2 / 2} 
+	\end{align*}
+	Therefore, 
+	\begin{align*}
+		\EE[\max_i X_i] \leq \frac{\log n}{\lambda} + \frac{\lambda \sigma^2}{2}, \quad \forall \lambda > 0.
+	\end{align*}
+	Using Chernoff bound, we get
+	\begin{align*}
+		\EE[\max_i X_i] \leq \inf_{\lambda>0} \frac{\log n}{\lambda} + \frac{\lambda \sigma^2}{2}  = \sqrt{2\sigma^{2} \log n},
+	\end{align*}
+
+The second inequality can be proved by using the fact that
+	\begin{align*}
+		\max_i |X_i| = \max \left\{ X_1, \cdots, X_n, (-X_1). \cdots, (-X_n) \right\}.
+	\end{align*}
+\end{proof}
+
+\subsection{Sub-exponential and Bernstein bounds}
+\begin{definition}[Sub-exponential] A random variable $X$ with mean $\mu$ is sub-exponential with parameter $(v, \alpha)$ if one of following holds:
+\begin{itemize}
+\setlength{\itemsep}{-0.5em}
+    \item MGF condition: $$\EE{e^{\lambda (X - \mu)} \leq e^{\frac{\lambda^2 v^2}{2}}}, \quad \forall |\lambda| < \frac{1}{\alpha}.$$
+    \item Tail bound condition: $$P(|X - \mu| \geq t) \leq c_1 e^{-c_2 t}, \quad \exists c_1, c_2 > 0, \forall t \geq 0.$$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Bernstein-type bound]For any random variable satisfying the Bernstein condition $\left|\mathbb{E}\left[(X-\mu)^{k}\right]\right| \leq \frac{1}{2} k ! \sigma^{2} b^{k-2}$, we have,
+\begin{align*}
+    P(|X-\mu| \geq t) \leq 2 e^{-\frac{t^{2}}{2\left(\sigma^{2}+b t\right)}}
+\end{align*}
+\end{theorem}
+\textbf{Remark}: For bounded RV, this bound is more tighter compared with Hoeffding bound for sub-Gaussian with $\sigma$ when $\sigma << b$.
+
+\begin{proof} Using Taylor expansion of the the MGF of sub-exponential RV, we have
+\begin{align*}
+\mathbb{E}\left[e^{\lambda(X-\mu)}\right] & \leq 1+\frac{\lambda^{2} \sigma^{2}}{2}+\sum_{k=3}^{\infty} \lambda^{k} \frac{\mathbb{E}\left[(X-\mu)^{k}\right]}{k !} \\
+& \leq 1+\frac{\lambda^{2} \sigma^{2}}{2}+\frac{\lambda^{2} \sigma^{2}}{2} \sum_{k=3}^{\infty}(|\lambda| b)^{k-2} \\
+& \leq 1+\frac{\lambda^{2} \sigma^{2} / 2}{1-b|\lambda|} \leq e^{\frac{\lambda^{2} \sigma^{2} / 2}{1-b|\lambda|}}
+\end{align*}
+Then, based on Chernoff bound, we get
+\begin{align*}
+\log  P(X - \mu \geq t) & \leq \inf_{\lambda} \left( \log \EE{e^{\lambda(X - \mu)}} - \lambda t \right) \\
+& \leq \inf_{\lambda}\left(\frac{\lambda^{2} \sigma^{2} / 2}{1-b|\lambda|} - \lambda t  \right) =  -\frac{t^{2}}{2\left(\sigma^{2}+b t\right)}.
+\end{align*}
+This gives the one-side bound. The two-side version can be obtained with additional factor of 2.
+\end{proof}
+
+\subsection{Martingale-based Methods}
+\begin{definition}[Martingale]
+A sequence of RVs $Y_1, Y_2, \cdots$ is said to be a martingale with respect to another sequence of RVs $X_1, X_2, ...$ if for all $n$,
+\begin{align*}
+    \mathbb{E} \vert Y_{n}\vert < \infty \quad \text{and} \quad \mathbb{E} [Y_{n+1}\mid X_{1},\ldots ,X_{n}] = Y_{n}.
+\end{align*}
+
+\end{definition}
+
+\begin{definition}[Doob martingale difference] 
+For a function $g_n: \mathcal{X} \rightarrow \R$ on independent RV $X_i \in \mathcal{X}$ and the $\sigma$-field $F_i = \sigma(X_1, \cdots, X_i)$, the Doob martingale difference $\{(D_i, F_i)\}_{i=1}^n$ is defined as
+\begin{align*}
+    D_i := S_i - S_{i-1},\quad \text{where } S_i := \mathbb{E}[g_n(X) \mid X_1, \cdots, X_i]
+\end{align*}
+\end{definition}
+Here, we often define $S_0 = \EE[g_n(X)]$, so that we have the \textit{telescoping decomposing}
+\begin{align*}
+    S_n - S_0 = \sum_{i=1}^n D_i.
+\end{align*}
+
+\begin{theorem}[Azuma-Hoeffding]
+For a martingale difference sequence $\{(D_i, F_i)\}_{i=1}^n$, $D_i \mid F_{i-1} \in [a_i, b_i]$ almost surely for $i=[n]$, then
+\begin{align*}
+    P\left(\sum_{i=1}^n D_i \geq t\right) \leq e^{-\frac{2t^2}{\sum_{i=1}^n (b_i - a_i)^2}}
+\end{align*}
+\end{theorem}
+\begin{proof}
+Since $D_i \mid F_{i-1} \in [a_i, b_i]$, we have
+\begin{align*}
+    \EEE{e^{\lambda D_i} \mid F_{i-1}} \leq e^{\frac{\lambda^2 (b_i - a_i)^2}{8}}
+\end{align*}
+To show the $\sum_{i=1}^n D_i$ is sub-Gaussian, we use the iterated expectation as, 
+\begin{align*}
+ \EEE{e^{\lambda \sum_{i=1}^n D_i}}  = &\ \E{D_1, \cdots, D_{n}}{e^{\lambda \sum_{i=1}^{n-1} D_i} \cdot \E{D_n}{e^{\lambda D_n} \mid F_{n-1}}} \\
+    = & \ \E{D_1, \cdots, D_{n-1}}{e^{\lambda \sum_{i=1}^{n-1} D_i}} \cdot \E{D_n}{e^{\lambda D_n} \mid F_{n-1}} \\
+    \leq &\ \E{D_1, \cdots, D_{n-1}}{e^{\lambda \sum_{i=1}^{n-1} D_i}} e^{\frac{\lambda^2 (b_n - a_n)^2}{8}}
+\end{align*}
+Using it recursively, we get $\EEE{e^{\lambda \sum_{i=1}^n D_i}} \leq e^{\frac{\lambda^2 \sum_{i=1}^n (b_i - a_i)^2}{8}}$. Then we can achieve the desired bound via Chernoff bound (similar to Prop.~\ref{prop:sub-gaussian-tail}, sub-Gaussian tail bound).
+\end{proof}
+
+\begin{theorem}[McDiarmid inequality]
+If $g_n(Z)$ satisfies the bounded difference condition, i.e. $|g_n(z) - g_n(z^{\backslash k})| \leq \sigma_k$,  for a random vector $Z$ with $n$ independent entries, then
+\begin{align*}
+    P(g_n(Z) - \EE g_n(Z) \geq t) \leq e^{-\frac{2t^2}{\sum_{i=1}^n \sigma^2_i}}
+\end{align*}
+where $z = (z_1, \cdots, z_k, \cdots, z_n)$, $z^{\backslash k} = (z_1, \cdots, z'_k, \cdots, z_n)$.
+\end{theorem}
+\begin{proof}
+First, please note that
+$$ g_n(Z) - \EE g_n(Z) = S_n - S_0 = \sum_{i=1}^n D_i,
+$$
+where $D_i = \mathbb{E}\left[g_{n}(Z) \mid Z_{1}, \ldots, Z_{i}\right]-\mathbb{E}\left[g_{n}(Z) \mid Z_{1}, \ldots, Z_{i-1}\right]$.
+Therefore, we can use the Azuma-Hoeffding inequality if we show that $D_i$ is bounded.
+\begin{align*}
+    D_k & \leq  \sup _{z} \mathbb{E}_{Z_{k+1:n}}\left[g_n\left(Z_{1:k-1}, z, Z_{k+1:n}\right)\right] \\
+        & \qquad  -\inf_{z} \mathbb{E}_{Z_{k+1:n}}\left[g_n\left(Z_{1:k-1}, z, Z_{k+1:n}\right)\right] \\
+    & \leq \sup _{z, z'} \bigg|\, \mathbb{E}_{Z_{k+1:n}}\left[g_n\left(Z_{1:k-1}, z, Z_{k+1:n}\right)\right]  \\
+    & \qquad - \mathbb{E}_{Z_{k+1:n}}\left[g_n\left(Z_{1:k-1}, z',  Z_{k+1:n}\right)\right] \bigg| \\
+    & \leq \sigma_k
+\end{align*}
+Then, we can plug it into the Azuma-Hoeffding inequality and conclude the proof.
+\end{proof}
+
+\subsection{Functional bounds}
+\begin{theorem}[Lipschitz functions]
+If $g: \R^n \rightarrow \R$ is $L$-Lipschitz function for vector $z$ with edclidean norm, $z_i \sim \NN(0, \sigma^2)$. 
+$$
+P(g(z)-\mathbb{E} g(z) \geq t) \leq e^{-\frac{c t^{2}}{L^{2} \sigma^{2}}}
+$$
+\end{theorem}
